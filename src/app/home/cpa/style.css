@@ -1,0 +1,225 @@
+:root {
+  --c-text-primary: #282a32;
+  --c-text-secondary: #686b87;
+  --c-text-action: #404089;
+  --c-accent-primary: #434ce8;
+  --c-border-primary: #eff1f6;
+  --c-background-primary: #ffffff;
+  --c-background-secondary: #fdfcff;
+  --c-background-tertiary: #ecf3fe;
+  --c-background-quaternary: #e9ecf4;
+}
+.toph{
+  padding-left: 3px;
+  padding-top: 5px;
+  font-size: 20px;
+}
+
+body {
+  line-height: 1.5;
+  min-height: 100vh;
+  font-family: "Be Vietnam Pro", sans-serif;
+  background-color: var(--c-background-secondary);
+  color: var(--c-text-primary);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus {
+  outline: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  border-bottom: 1px solid var(--c-border-primary);
+  background-color: var(--c-background-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.header-logo {
+  margin-right: 2.5rem;
+}
+
+.header-logo a {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo a div {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.header-logo a div:after {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  height: 50%;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.main {
+  padding-top: 1.5rem;
+}
+
+.main-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+@media (max-width: 550px) {
+  .main-header h1 {
+    margin-bottom: 1rem;
+  }
+}
+
+
+*   {
+box-sizing: border-box;
+}
+
+ul {
+list-style-type: none;
+padding: 0;
+margin: 0;
+margin-top: 5px;
+
+}
+
+ul li {
+border: 1px solid #ddd;
+margin-top: 4px; /* Prevent double borders */
+background-color: #ffffff;
+padding: 12px;
+border-radius: 8px;
+width: 800px;
+
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+main {
+margin: 0px 10px 10px 10px;
+
+}
+.container {
+        max-width: 450px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+   
+
+    input[type="submit"] {
+        width: 60%;
+max-width: 300px; /* Optional, to set a maximum width for the button */
+height: 50px;
+border: 1px solid;
+background: #42A9D4;
+border-radius: 25px;
+font-size: 18px;
+color: #fcfcfc;
+font-weight: 700;
+cursor: pointer;
+outline: none;
+margin: 20px auto; /* Center the button horizontally using auto margins */
+display: block;
+    }
+
+    input[type="submit"]:hover {
+        bwidth: 60%;
+max-width: 300px; /* Optional, to set a maximum width for the button */
+height: 50px;
+border: 1px solid;
+background: #42A9D4;
+border-radius: 25px;
+font-size: 18px;
+color: #fcfcfc;
+font-weight: 700;
+cursor: pointer;
+outline: none;
+margin: 20px auto; /* Center the button horizontally using auto margins */
+display: block;
+    }
+
+    button {
+      background-color: #2691d9;
+      border-radius: 25px;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .logo-section {
+        padding-bottom: 5px;
+        border-bottom:6px solid grey;
+        margin-bottom: 20px;
+    }
+    .logo{
+        padding-top: 5px;
+        width:150px;
+        height:50px;
+    }
+    table {
+        text-align: center;
+        border-collapse: collapse;
+        width: 1000px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    input[type="radio"] {
+        margin-right: 5px;
+    }
+
+    #proceedButton {
+        margin-top: 10px;
+        padding: 10px;
+        cursor: pointer;
+    }

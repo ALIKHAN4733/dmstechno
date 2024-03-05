@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#doc {
+    border: 1px solid #bebebe;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 15px;
+    width: 600px;
+    padding-bottom: 30px;
+    box-shadow: inset;
+}
+
+form {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px; /* Add margin below each label */
+}
+
+/* Apply white color to input, textarea, and select elements */
+input,
+textarea,
+select {
+    color: white;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px; 
+    box-sizing: border-box;
+    border: 1px solid black; /* Add this line to set border color to black */
+}
+
+button {
+    background-color: #2691d9 !important;
+    border-radius: 25px;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
