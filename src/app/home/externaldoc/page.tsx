@@ -10,6 +10,7 @@ interface FileObject {
   id: number;
   file_name: string;
   path: string;
+
 }
 
 const Home: React.FC = () => {
@@ -78,6 +79,26 @@ const Home: React.FC = () => {
 
     fetchFiles();
   }, []);
+  const [department, setName] = useState('');
+
+  useEffect(() => {
+    // Retrieve 'userData' from session storage and parse it back to an object
+    const userDataStoredString = sessionStorage.getItem('userData');
+    if (userDataStoredString) {
+      try {
+        const userDataStored = JSON.parse(userDataStoredString);
+        if (userDataStored && userDataStored.department) {
+          setName(userDataStored.department);
+        } else {
+          console.error('Error: User data in session storage is invalid');
+        }
+      } catch (error) {
+        console.error('Error parsing user data from session storage:', error);
+      }
+    } else {
+      console.error('Error: User data not found in session storage');
+    }
+  }, []);
   
   return (
     <div className='body'>
@@ -87,6 +108,7 @@ const Home: React.FC = () => {
         External Documents
       </div>
       <div className='main'>
+      {department === "Quality Control" && (
       <div className="container">
       <input type="file" accept=".pdf" onChange={handleFileChange} />
       <input
@@ -97,7 +119,7 @@ const Home: React.FC = () => {
       />
       <p>Selected File: {fileName || 'No file selected'}</p>
       <button onClick={handleUpload}>Upload</button>
-      </div>
+      </div>)}
 
       <h2>Uploaded Files:</h2>
       <ul>
@@ -106,7 +128,7 @@ const Home: React.FC = () => {
 {files.map((file) => (
   <li key={file.id}>
     <Link href={{
-      pathname:"qualitypolicy/pdfview",
+      pathname:"externaldoc/pdfview",
       query:{filepathdb: file.path}
     }}>
       {file.file_name}

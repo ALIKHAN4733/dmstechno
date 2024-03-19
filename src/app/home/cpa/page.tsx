@@ -1,7 +1,7 @@
 'use client'
-import React from 'react';
 import './style.css';
 import Link from "next/link";
+import React, { useState, ChangeEvent, useEffect } from 'react';
 
 interface SelectedAction {
   rowId: string;
@@ -21,6 +21,7 @@ class YourComponent extends React.Component<Props, State> {
       selectedActions: [],
     };
   }
+  
 
   handleRadioClick = (rowId: string, radioName: string) => {
     const radios = document.getElementsByName(radioName) as NodeListOf<HTMLInputElement>;
@@ -61,6 +62,7 @@ class YourComponent extends React.Component<Props, State> {
   };
 
   render() {
+    
     return (
       <div>
         <main className="main">

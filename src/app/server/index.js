@@ -12,6 +12,8 @@ const path = require('path');
 const app = express();
 const jwt = require('jsonwebtoken');
 
+
+
 const generateToken = (userId) => {
   return jwt.sign({ userId }, 'your-secret-key', { expiresIn: '1h' });
 };
@@ -19,7 +21,13 @@ const generateToken = (userId) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressSession({ secret: 'mySecretKey', resave: false, saveUninitialized: false }));
+app.use(expressSession({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -39,6 +47,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passportconfig.js")(passport);
 
+
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './public/pdf'); // Updated destination directory
@@ -50,8 +61,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 // Handle preflight requests
 app.options('/login', cors());
@@ -61,21 +75,48 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+  origin: 'http://localhost:3000',
+  credentials: true
 }), (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) { throw err; }
-        if (!user) { res.send('No user exists'); }
-        if (user) {
-            req.login(user, (err) => {
-                if (err) { throw err; }
-                res.send("user logged in");
-                console.log(user);
-            });
-        }
-    })(req, res, next);
+  passport.authenticate('local', async (err, user, info) => {
+    if (err) { 
+      return res.status(500).json({ error: 'An error occurred during authentication' }); 
+    }
+    if (!user) { 
+      return res.status(401).json({ error: 'No user exists' });
+    }
+    req.login(user, async (err) => {
+      if (err) { 
+        return res.status(500).json({ error: 'An error occurred during login' }); 
+      }
+
+      // Extract user data and store it in MySQL database after login
+      const { id, username, position, name, department } = user;
+      const userData = { id, username, position, name, department };
+      
+      try {
+        // Save userData to your database
+        const sql = 'INSERT INTO users (id, username, position, name, department) VALUES (?, ?, ?, ?, ?)';
+        await db.execute(sql, [id, username, position, name, department]);
+
+        // Store user data in session storage
+        req.session.userData = userData;
+        console.log('User data stored in session storage:', req.session.userData);
+
+        // Send back the user data to the client
+        res.status(200).json({ message: "user logged in", userData: userData });
+      } catch (error) {
+        console.error('Error storing user data in database:', error);
+        res.status(500).json({ error: 'Error storing user data in database' });
+      }
+    });
+  })(req, res, next);
 });
+
+
+
+
+
 
 app.post('/upload', upload.single('pdf'), async (req, res) => {
   try {
@@ -131,6 +172,30 @@ app.get('/getFiles', (req, res) => {
   });
 });
 
+
+
+app.post('/api/meetings', async (req, res) => {
+  try {
+    console.log('Received request for /api/meetings with body:', req.body); // Log the request body to debug
+
+    const { name, dateTime, actionPoints } = req.body;
+    const [date, time] = dateTime.split('T');
+    const actionPointsJson = JSON.stringify(actionPoints);
+
+    const sql = 'INSERT INTO userdata.meetings (name, date, time, action_points) VALUES (?, ?, ?, ?)';
+    await db.execute(sql, [name, date, time, actionPointsJson]);
+
+    console.log('Meeting created successfully');
+    res.status(200).json({ message: 'Meeting created successfully' });
+  } catch (error) {
+    console.error('Error creating meeting:', error);
+    res.status(500).json({ error: 'Internal Server Error', detail: error.message });
+  }
+});
+
+
+
+
 app.get('/getFiles2', (req, res) => {
   const sql = 'SELECT * FROM ed_pdf_storage';
   db.query(sql, (err, result) => {
@@ -143,6 +208,34 @@ app.get('/getFiles2', (req, res) => {
   });
 });
 
+// This example assumes that you are using Express and have a connection to a database set up
+
+app.get('/api/1meetings/:name', async (req, res) => {
+    const sql = `select * from userdata.meetings where name = 'Meeting'`;
+    const result = db.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error fetching files from database:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        res.json(result);
+        console.log(result);
+      }
+    });
+  });
+
+
+  app.get('/api/ppmmeetings/:name', async (req, res) => {
+    const sql = `select * from userdata.meetings`;
+    const result = db.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error fetching files from database:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        res.json(result);
+        console.log(result);
+      }
+    });
+  });
 
 
 app.get('/api/user', cors(), (req, res) => {

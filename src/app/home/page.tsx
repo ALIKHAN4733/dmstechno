@@ -4,30 +4,45 @@ import './style.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 function Home() {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const router = useRouter();
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/user', { withCredentials: true })
-      .then((res) => {
-        setUsername(res.data.user.username);
-      })
-      .catch((err) => {
-        console.error('Error fetching user data:', err);
-      });
+    const userDataStoredString = sessionStorage.getItem('userData');
+    if (userDataStoredString) {
+      try {
+        const userDataStored = JSON.parse(userDataStoredString);
+        if (userDataStored && userDataStored.name) {
+          setName(userDataStored.name);
+        } else {
+          console.error('Error: User data in session storage is invalid');
+        }
+      } catch (error) {
+        console.error('Error parsing user data from session storage:', error);
+      }
+    } else {
+      console.error('Error: User data not found in session storage');
+    }
+    setIsLoading(false); // Set loading to false after attempting to load user data
   }, []);
 
+  useEffect(() => {
+    if (!isLoading && name === '') { // Check if not loading and name is empty
+      router.push('/');
+    }
+  }, [name, isLoading, router]); 
 
   return (
-    
     <div className="content-main">
-      
-      <p>Welcome, {username}!</p>
+      <p>Welcome, {name}!</p>
       <div className="card-grid">
+      <Link href={'home/doc'}>
         <article className="card">
-          <Link href="file:///C:/Users/Lenovo/techno/displaypg.html" style={{ textDecoration: 'none', color: '#212121' }}>
-            <div className="card-header">
+           <div className="card-header">
               <div>
                 <span><img src="dcp.png" alt="Document Controlling Process" /></span>
                 <h3>Document Controlling Process</h3>
@@ -36,10 +51,10 @@ function Home() {
             <div className="card-body">
               <p>A system for managing, organizing, and tracking organizational documents to ensure version control, accessibility, and compliance with established procedures and standards.</p>
             </div>
-          </Link>
-        </article>
+          
+        </article></Link>
 
-        <Link href={'home/audit'}>
+        <Link href={'home/ia'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -93,7 +108,7 @@ function Home() {
           </div>
         </article>
         </Link>
-
+        
         <Link href="/home/mangementmeeting">
         <article className="card">
           <div className="card-header">
@@ -108,18 +123,19 @@ function Home() {
         </article>
         </Link>
 
-        <article className="card">
-          <div className="card-header">
-            <div>
-              <span><img src="5S & Compliance Non-conformity.png" /></span>
-              <h3>Compliance Non-conformity</h3>
-            </div>
-          </div>
-          <div className="card-body">
-            <p>5S represents a workplace organization method, and compliance non-conformity pertains to violations of regulatory compliance standards within an organization.</p>			
-					</div>
-                  </article>
+  {/*   <article className="card">
+  <div className="card-header">
+        <div>
+            <span><img src="5S & Compliance Non-conformity.png" /></span>
+            <h3>Compliance Non-conformity</h3>
+        </div>
+    </div>
+    <div className="card-body">
+        <p>5S represents a workplace organization method, and compliance non-conformity pertains to violations of regulatory compliance standards within an organization.</p>			
+    </div>
+</article> */}
 
+                  <Link href={'home/reviewofsystem'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -131,7 +147,8 @@ function Home() {
             <p>An in-depth evaluation of an organization's documented procedures, policies, and process flow charts to ensure they are current, effective, and aligned with organizational goals and industry standards.</p>
 						</div>
         </article>
-
+        </Link>
+        <Link href={'home/ppm'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -143,7 +160,8 @@ function Home() {
             <p>A meeting held before a project or production to plan and coordinate activities, accompanied by a checklist outlining tasks and requirements to ensure a successful launch.</p>
 						</div>
         </article>
-
+        </Link>
+        <Link href={'home/supplier'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -155,6 +173,7 @@ function Home() {
             <p>The systematic assessment of a company's suppliers, which includes rating their performance, quality, and reliability to make informed procurement decisions.</p>
 						</div>
         </article>
+        </Link>
 
         <Link href={'home/externaldoc'}>
         <article className="card">
@@ -169,7 +188,7 @@ function Home() {
 						</div>
         </article>
         </Link>
-
+        <Link href={'home/TA'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -181,6 +200,8 @@ function Home() {
             <p>The process of educating employees and stakeholders to enhance their knowledge, understanding, and skills related to topics like company policies, safety procedures, compliance requirements, or new technologies.</p>
 						 </div>
         </article>
+        </Link>
+        <Link href={'home/mcr'}>
         <article className="card">
           <div className="card-header">
             <div>
@@ -193,7 +214,7 @@ function Home() {
 </p>
           </div>
         </article>
-
+</Link>
       </div>
     </div>
   );

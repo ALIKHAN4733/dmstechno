@@ -35,6 +35,26 @@ const Home: React.FC = () => {
       }
     });
   }
+  const [department, setName] = useState('');
+
+  useEffect(() => {
+    // Retrieve 'userData' from session storage and parse it back to an object
+    const userDataStoredString = sessionStorage.getItem('userData');
+    if (userDataStoredString) {
+      try {
+        const userDataStored = JSON.parse(userDataStoredString);
+        if (userDataStored && userDataStored.department) {
+          setName(userDataStored.department);
+        } else {
+          console.error('Error: User data in session storage is invalid');
+        }
+      } catch (error) {
+        console.error('Error parsing user data from session storage:', error);
+      }
+    } else {
+      console.error('Error: User data not found in session storage');
+    }
+  }, []);
 
   const handleCustomFileNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCustomFileName(e.target.value);
@@ -95,23 +115,26 @@ const Home: React.FC = () => {
   
   return (
     <div className='body'>
+   
 
     
       <div className='toph'>
         Quality Policy
       </div>
       <div className='main'>
-      <div className="container">
-      <input type="file" accept=".pdf" onChange={handleFileChange} />
-      <input
-        type="text"
-        placeholder="Enter custom file name"
-        value={customFileName}
-        onChange={handleCustomFileNameChange}
-      />
-      <p>Selected File: {fileName || 'No file selected'}</p>
-      <button onClick={handleUpload}>Upload</button>
-      </div>
+      {department === "Quality Control" && (
+          <div className="container">
+            <input type="file" accept=".pdf" onChange={handleFileChange} />
+            <input
+              type="text"
+              placeholder="Enter custom file name"
+              value={customFileName}
+              onChange={handleCustomFileNameChange}
+            />
+            <p>Selected File: {fileName || 'No file selected'}</p>
+            <button onClick={handleUpload}>Upload</button>
+          </div>
+        )}
 
       <h2>Uploaded Files:</h2>
       <ul>

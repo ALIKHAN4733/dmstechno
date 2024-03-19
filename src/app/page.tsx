@@ -5,6 +5,8 @@ import './globals.css';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
+
 
 function App() {
   const [usernameLog, setusername] = useState('');
@@ -26,15 +28,27 @@ function App() {
       withCredentials: true,
       url: 'http://localhost:3001/login', // Update the endpoint to '/login'
     })
-      .then((res) => {
-        console.log(res);
-        if (res.data === 'user logged in') {
-          router.push('/home', { scroll: false });
-          console.log('User logged in');
-        }
-      })
-      .catch((err) => console.log(err));
+    .then((res) => {
+      console.log('Response from server:', res.data);
+      if (res.data.message === 'user logged in' && res.data.userData) {
+        // Storing the user data in SessionStorage
+        sessionStorage.setItem('userData', JSON.stringify(res.data.userData));
+        Cookies.set('loggedin', 'true') ;
+  
+        // Redirect to the home page
+        router.push('/home', { scroll: false });
+        console.log('User logged in and data stored in SessionStorage');
+      } else {
+        // Log the error or message from server if login was not successful
+        console.log(res.data.message || 'Login was not successful.');
+      }
+    })
+    .catch((err) => {
+      console.error('Login error:', err);
+      // You may want to show the user an error message here
+    });
   };
+  
 
   return (
     <div className='login'>
